@@ -1,0 +1,15 @@
+spring:
+  redis:
+    host: 192.168.9.128
+    password: yan21ning
+    port: 6379
+    pool:
+      max-idle: 100
+      min-idle: 1
+      max-active: 1000
+      max-wait: -1
+mybatis:
+  type-aliases-package: com.xfqb.redis.task
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

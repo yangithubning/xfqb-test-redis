@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xfqb.redis.task.mapper.SysJobMapper">
+
+	<sql id="allField">
+		job_id,
+		bean_name,
+		method_name,
+		method_params,
+		cron_expression,
+		remark,
+		job_status,
+		create_time,
+		update_time
+	</sql>
+	<sql id="tableName">
+	task_info
+	</sql>
+	<select id="getSysJobListByStatus"
+		parameterType="java.lang.Integer"
+		resultType="com.xfqb.redis.task.SysJobPO">
+		select <include refid="allField"/>
+		from task_info 
+		where job_status = #{status}
+		order by update_time desc 
+	</select>
+	
+	<insert id="addSysJob">
+		insert into <include refid="tableName"/>
+		(job_id,bean_name,method_name,method_params,cron_expression,job_status,remark)
+		values(#{jobId},#{beanName},#{methodName},#{methodParams},#{cronExpression},#{jobStatus},#{remark})
+	</insert>
+	
+	<update id="editSysJob">
+		update <include refid="tableName"/>
+		<trim prefix="set" suffixOverrides="and">
+			<if test="beanName != null and beanName != '' ">
+			bean_name = #{beanName}
+			</if>
+			<if test="methodName != null and methodName != '' ">
+			method_name = #{methodName}
+			</if>
+			<if test="methodParams != null and methodParams != '' ">
+			method_params = #{methodParams}
+			</if>
+			<if test="cronExpression != null and cronExpression != '' ">
+			cron_expression = #{cronExpression}
+			</if>
+			<if test="jobStatus != null and jobStatus != '' ">
+			job_status = #{jobStatus}
+			</if>
+			<if test="remark != null and remark != '' ">
+			remark = #{remark}
+			</if>
+		</trim>
+		where job_id = #{jobId}
+	</update>
+	
+	<delete id="deleteSysJobById">
+		delete from <include refid="tableName"/>
+		where job_id = #{jobId}
+	</delete>
+	
+	<select id="getSysJobById" resultType="com.xfqb.redis.task.SysJobPO">
+	select <include refid="allField"/>
+	from <include refid="tableName"/>
+	where job_id = #{jobId}
+	</select>
+
+</mapper>
